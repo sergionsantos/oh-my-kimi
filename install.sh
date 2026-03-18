@@ -142,6 +142,58 @@ fi
 
 echo ""
 
+# Create wrapper for easy access
+echo "🔧 Creating OMK wrapper..."
+if [ "$OS" = "windows" ]; then
+    # Windows wrapper
+    cat > "${HOME}/kimi-omk.bat" << 'EOF'
+@echo off
+kimi-cli --skills-dir "%APPDATA%\kimi\skills" %*
+EOF
+    chmod +x "${HOME}/kimi-omk.bat" 2>/dev/null || true
+    echo "✓ Wrapper created: ~/kimi-omk.bat"
+    echo "   Use: ./kimi-omk.bat instead of kimi-cli"
+    WRAPPER_CMD="./kimi-omk.bat"
+else
+    # Linux/macOS wrapper
+    cat > "${HOME}/kimi-omk" << EOF
+#!/bin/bash
+kimi-cli --skills-dir "${SKILLS_DIR}" "\$@"
+EOF
+    chmod +x "${HOME}/kimi-omk"
+    echo "✓ Wrapper created: ~/kimi-omk"
+    echo "   Use: ./kimi-omk instead of kimi-cli"
+    WRAPPER_CMD="./kimi-omk"
+fi
+
+echo ""
+
+# Test installation
+echo "🧪 Testing installation..."
+cd "${HOME}" 2>/dev/null || true
+
+if [ "$OS" = "windows" ]; then
+    # Windows test with timeout
+    if timeout 15 ./kimi-omk.bat -p "list skills" --print 2>/dev/null | grep -q "oh-my-kimi"; then
+        echo "✅ Installation test PASSED"
+        TEST_SUCCESS=true
+    else
+        echo "⚠️  Installation test failed"
+        TEST_SUCCESS=false
+    fi
+else
+    # Linux/macOS test
+    if timeout 15 ./kimi-omk -p "list skills" --print 2>/dev/null | grep -q "oh-my-kimi"; then
+        echo "✅ Installation test PASSED"
+        TEST_SUCCESS=true
+    else
+        echo "⚠️  Installation test failed"
+        TEST_SUCCESS=false
+    fi
+fi
+
+echo ""
+
 # Final message
 echo "✅ Installation Complete!"
 echo ""
@@ -150,11 +202,17 @@ echo ""
 echo "🎉 Oh My Kimi is ready to use!"
 echo ""
 echo "Quick start:"
-echo "  $autopilot \"build a REST API\""
-echo "  $team 3 \"fix all errors\""
-echo "  /omk-help"
+echo "  ${WRAPPER_CMD} -p \"\$autopilot build a REST API\" --print"
+echo "  ${WRAPPER_CMD} -p \"\$team 3 fix all errors\" --print"
 echo ""
-echo "Documentation:"
+if [ "$TEST_SUCCESS" = false ]; then
+    echo "⚠️  If you encounter issues:"
+    echo "  1. Restart terminal/command prompt"
+    echo "  2. Run: kimi-cli logout && kimi-cli login"
+    echo "  3. Test: ${WRAPPER_CMD} -p \"list skills\" --print"
+    echo ""
+fi
+echo "Documentation & Troubleshooting:"
 echo "  https://github.com/sergionsantos/oh-my-kimi#readme"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

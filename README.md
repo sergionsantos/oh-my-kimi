@@ -41,9 +41,27 @@ OMK transforms kimi-cli into a team of 36 specialized agents working together to
 git clone https://github.com/sergionsantos/oh-my-kimi.git
 cd oh-my-kimi
 
-# Run the setup wizard
-/omk-setup
+# Run the installation script
+./install.sh         # Linux/macOS (Git Bash/WSL on Windows)
+# or
+.\install.ps1        # Windows PowerShell
 ```
+
+### ✅ Verify Installation
+
+After installation, test that everything works:
+
+```bash
+# Windows
+.\kimi-omk.bat -p "list skills" --print
+
+# Linux/macOS
+./kimi-omk -p "list skills" --print
+```
+
+**Expected output:** Should show `oh-my-kimi` in the skills list.
+
+**If it doesn't work:** See [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 
 ### Your First OMK Session
 

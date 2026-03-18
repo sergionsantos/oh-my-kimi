@@ -146,7 +146,40 @@ if (Test-Path $skillsDir) {
 
 Write-Host ""
 
+# Create wrapper for easy access
+Write-Host ""
+Write-Host "🔧 Creating OMK wrapper..." -ForegroundColor Yellow
+$WrapperPath = "$env:USERPROFILE\kimi-omk.bat"
+@'
+@echo off
+kimi-cli --skills-dir "%APPDATA%\kimi\skills" %*
+'@ | Out-File -FilePath $WrapperPath -Encoding ASCII
+
+Write-Host "✓ Wrapper created: $WrapperPath" -ForegroundColor Green
+Write-Host "   Use: .\kimi-omk.bat instead of kimi-cli" -ForegroundColor Cyan
+
+# Test installation
+Write-Host ""
+Write-Host "🧪 Testing installation..." -ForegroundColor Yellow
+Set-Location $env:USERPROFILE
+
+$TestSuccess = $false
+try {
+    $TestOutput = & cmd /c "timeout 15 .\kimi-omk.bat -p `"list skills`" --print 2>nul"
+    if ($TestOutput -match "oh-my-kimi") {
+        Write-Host "✅ Installation test PASSED" -ForegroundColor Green
+        $TestSuccess = $true
+    } else {
+        Write-Host "⚠️  Installation test failed" -ForegroundColor Yellow
+        $TestSuccess = $false
+    }
+} catch {
+    Write-Host "⚠️  Installation test failed" -ForegroundColor Yellow
+    $TestSuccess = $false
+}
+
 # Final message
+Write-Host ""
 Write-Host "✅ Installation Complete!" -ForegroundColor Green
 Write-Host ""
 Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Cyan
@@ -154,11 +187,17 @@ Write-Host ""
 Write-Host "🎉 Oh My Kimi is ready to use!" -ForegroundColor Green
 Write-Host ""
 Write-Host "Quick start:" -ForegroundColor Cyan
-Write-Host '  $autopilot "build a REST API"' -ForegroundColor Yellow
-Write-Host '  $team 3 "fix all errors"' -ForegroundColor Yellow
-Write-Host "  /omk-help" -ForegroundColor Yellow
+Write-Host "  .\kimi-omk.bat -p `"`$autopilot build a REST API`" --print" -ForegroundColor Yellow
+Write-Host "  .\kimi-omk.bat -p `"`$team 3 fix all errors`" --print" -ForegroundColor Yellow
 Write-Host ""
-Write-Host "Documentation:" -ForegroundColor Cyan
+if (-not $TestSuccess) {
+    Write-Host "⚠️  If you encounter issues:" -ForegroundColor Yellow
+    Write-Host "  1. Restart PowerShell/Command Prompt" -ForegroundColor White
+    Write-Host "  2. Run: kimi-cli logout; kimi-cli login" -ForegroundColor White
+    Write-Host "  3. Test: .\kimi-omk.bat -p `"list skills`" --print" -ForegroundColor White
+    Write-Host ""
+}
+Write-Host "Documentation & Troubleshooting:" -ForegroundColor Cyan
 Write-Host "  https://github.com/sergionsantos/oh-my-kimi#readme" -ForegroundColor Gray
 Write-Host ""
 Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Cyan

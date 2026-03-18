@@ -76,7 +76,7 @@ else
     # Remote installation (download from GitHub)
     echo "📥 Downloading from GitHub..."
     TEMP_DIR=$(mktemp -d)
-    git clone --depth 1 https://github.com/sergio-ventura/oh-my-kimi.git "$TEMP_DIR"
+    git clone --depth 1 https://github.com/sergionsantos/oh-my-kimi.git "$TEMP_DIR"
     cp -r "$TEMP_DIR/omk" "$SKILLS_DIR/"
     rm -rf "$TEMP_DIR"
     echo "✓ Downloaded and installed"
@@ -155,6 +155,6 @@ echo "  $team 3 \"fix all errors\""
 echo "  /omk-help"
 echo ""
 echo "Documentation:"
-echo "  https://github.com/sergio-ventura/oh-my-kimi#readme"
+echo "  https://github.com/sergionsantos/oh-my-kimi#readme"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

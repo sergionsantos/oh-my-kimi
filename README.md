@@ -1,6 +1,6 @@
 # 🚀 Oh My Kimi (OMK)
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/sergio-ventura/oh-my-kimi/releases)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/sergionsantos/oh-my-kimi/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
@@ -38,7 +38,7 @@ OMK transforms kimi-cli into a team of 36 specialized agents working together to
 
 ```bash
 # Clone the repository
-git clone https://github.com/sergio-ventura/oh-my-kimi.git
+git clone https://github.com/sergionsantos/oh-my-kimi.git
 cd oh-my-kimi
 
 # Run the setup wizard

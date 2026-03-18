@@ -77,7 +77,7 @@ if (Test-Path (Join-Path $OMK_DIR "omk")) {
     # Remote installation
     Write-Host "📥 Downloading from GitHub..." -ForegroundColor Gray
     $TEMP_DIR = Join-Path $env:TEMP "omk-install-$(Get-Random)"
-    git clone --depth 1 https://github.com/sergio-ventura/oh-my-kimi.git $TEMP_DIR
+    git clone --depth 1 https://github.com/sergionsantos/oh-my-kimi.git $TEMP_DIR
     Copy-Item -Path (Join-Path $TEMP_DIR "omk") -Destination $SKILLS_DIR -Recurse -Force
     Remove-Item -Path $TEMP_DIR -Recurse -Force
     Write-Host "✓ Downloaded and installed" -ForegroundColor Green
@@ -159,7 +159,7 @@ Write-Host '  $team 3 "fix all errors"' -ForegroundColor Yellow
 Write-Host "  /omk-help" -ForegroundColor Yellow
 Write-Host ""
 Write-Host "Documentation:" -ForegroundColor Cyan
-Write-Host "  https://github.com/sergio-ventura/oh-my-kimi#readme" -ForegroundColor Gray
+Write-Host "  https://github.com/sergionsantos/oh-my-kimi#readme" -ForegroundColor Gray
 Write-Host ""
 Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Cyan
 

@@ -1,0 +1,42 @@
+# OMK State and Logs
+.omk/state/
+.omk/logs/
+.omk/traces/
+.omk/research/
+.omk/artifacts/
+.omk/sessions/
+
+# User configuration (may contain secrets)
+.omk/config.json
+~/.kimi/omk_config.json
+~/.kimi/omk_config.*.json
+
+# Node modules (if using CLI tools)
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Test outputs
+coverage/
+.nyc_output/
+
+# Build outputs
+dist/
+build/

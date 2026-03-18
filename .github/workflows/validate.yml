@@ -1,0 +1,104 @@
+name: Validate OMK
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Validate Skill Files
+      run: |
+        # Check all SKILL.md files have required frontmatter
+        for skill in omk/skills/*/SKILL.md; do
+          if [ -f "$skill" ]; then
+            if ! grep -q "^---$" "$skill"; then
+              echo "❌ Missing frontmatter in $skill"
+              exit 1
+            fi
+            if ! grep -q "^name:" "$skill"; then
+              echo "❌ Missing name in $skill"
+              exit 1
+            fi
+            if ! grep -q "^description:" "$skill"; then
+              echo "❌ Missing description in $skill"
+              exit 1
+            fi
+            echo "✓ $skill"
+          fi
+        done
+    
+    - name: Validate Agent Files
+      run: |
+        # Check all agent files have required sections
+        for agent in omk/agents/*.md; do
+          if [ -f "$agent" ]; then
+            if ! grep -q "^# " "$agent"; then
+              echo "❌ Missing title in $agent"
+              exit 1
+            fi
+            if ! grep -q "## Identity" "$agent"; then
+              echo "❌ Missing Identity section in $agent"
+              exit 1
+            fi
+            if ! grep -q "## Role" "$agent"; then
+              echo "❌ Missing Role section in $agent"
+              exit 1
+            fi
+            echo "✓ $agent"
+          fi
+        done
+    
+    - name: Count Components
+      run: |
+        AGENTS=$(ls omk/agents/*.md 2>/dev/null | wc -l)
+        SKILLS=$(ls omk/skills/*/SKILL.md 2>/dev/null | wc -l)
+        echo "Agents: $AGENTS"
+        echo "Skills: $SKILLS"
+        
+        if [ "$AGENTS" -lt 30 ]; then
+          echo "❌ Expected at least 30 agents"
+          exit 1
+        fi
+        
+        if [ "$SKILLS" -lt 25 ]; then
+          echo "❌ Expected at least 25 skills"
+          exit 1
+        fi
+    
+    - name: Validate README
+      run: |
+        if [ ! -f README.md ]; then
+          echo "❌ README.md not found"
+          exit 1
+        fi
+        
+        if ! grep -q "Oh My Kimi" README.md; then
+          echo "❌ README missing title"
+          exit 1
+        fi
+        
+        echo "✓ README.md valid"
+
+  markdown-lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+    
+    - name: Install markdownlint
+      run: npm install -g markdownlint-cli
+    
+    - name: Lint Markdown
+      run: markdownlint '**/*.md' --ignore node_modules --ignore CHANGELOG.md || true
